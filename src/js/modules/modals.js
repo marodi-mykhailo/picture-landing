@@ -1,5 +1,6 @@
 const modals = () => {
-    const bindModal = (targetSelector, modalSelector, closeSelector, clickCloseOverlay = true) => {
+    let btnPressed;
+    const bindModal = (targetSelector, modalSelector, closeSelector, destroy = false) => {
         const target = document.querySelectorAll(targetSelector),
             modal = document.querySelector(modalSelector),
             close = document.querySelector(closeSelector),
@@ -11,9 +12,15 @@ const modals = () => {
                 if (e.target) {
                     e.preventDefault();
                 }
+                btnPressed = true;
+
+                if (destroy) {
+                    item.remove();
+                }
 
                 windows.forEach(item => {
                     item.style.display = "none";
+                    item.classList.add('animated', 'fadeIn')
                 });
 
                 modal.style.display = "block";
@@ -62,8 +69,21 @@ const modals = () => {
         }, time);
     };
 
-    bindModal('.button-design', '.popup-design', '.popup-design .popup-close')
-    bindModal('.button-consultation', '.popup-consultation', '.popup-consultation .popup-close')
-    setModalByTime('.popup-consultation', 60000)
+    const openByScroll = (selector) => {
+        window.addEventListener('scroll', () => {
+            let scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+            if (!btnPressed && (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight)) {
+                document.querySelector(selector).click();
+            }
+        });
+    };
+
+
+    bindModal('.button-design', '.popup-design', '.popup-design .popup-close');
+    bindModal('.button-consultation', '.popup-consultation', '.popup-consultation .popup-close');
+    bindModal('.fixed-gift', '.popup-gift', '.popup-gift .popup-close', true);
+    setModalByTime('.popup-consultation', 60000);
+
+    openByScroll('.fixed-gift');
 }
 export default modals;
