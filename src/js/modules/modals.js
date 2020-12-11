@@ -45,6 +45,25 @@ const modals = () => {
         });
     };
 
+    const setModalByTime = (selector, time) => {
+        const modal = document.querySelector(selector)
+        let display;
+        setTimeout(() => {
+            document.querySelectorAll("[data-modal]").forEach(item => {
+                if (getComputedStyle(item).display === "block") {
+                    display = "block";
+                }
+            });
+
+            if (!display) {
+                modal.style.display = "block";
+                document.body.style.overflow = "hidden";
+            }
+        }, time);
+    };
+
     bindModal('.button-design', '.popup-design', '.popup-design .popup-close')
+    bindModal('.button-consultation', '.popup-consultation', '.popup-consultation .popup-close')
+    setModalByTime('.popup-consultation', 60000)
 }
 export default modals;
